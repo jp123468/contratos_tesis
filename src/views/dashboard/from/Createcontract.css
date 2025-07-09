@@ -1,0 +1,42 @@
+.step-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    min-height: 500px; /* o el alto que quieras */
+  }
+.label_form{
+    font-weight: bold;
+}
+    /* Ajusta el contenedor de los Toasts para que se muestre sobre el formulario */
+.toast-container {
+    position: fixed;
+    top: 10px; /* Ajusta la distancia desde el top según sea necesario */
+    right: 10px; /* Ajusta la distancia desde el right según sea necesario */
+    z-index: 1050; /* Asegúrate de que esté por encima de otros elementos */
+}
+
+/* Estilos personalizados para el Toast */
+.toast {
+    color: #ffffff; /* Color de letra blanco */
+    background-color: #000000; /* Fondo negro como ejemplo, ajusta si es necesario */
+}
+
+.toast-success {
+    background-color: #28a745; /* Color de fondo verde para el éxito */
+}
+
+.toast-danger {
+    background-color: #dc3545; /* Color de fondo rojo para el error */
+}
+
+/* Asegúrate de que el texto dentro del Toast sea blanco */
+.toast-body {
+    color: #ffffff;
+}
+
+
+.data-value {
+    color: #007bff; /* para mantener el azul */
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }

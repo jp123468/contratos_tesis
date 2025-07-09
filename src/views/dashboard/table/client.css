@@ -1,0 +1,9 @@
+
+  .highlight-input {
+    border: 2px solid #3e95f2; /* Color del borde del campo de entrada, ajusta según tus necesidades */
+  }
+  .data-value {
+    color: #007bff; /* para mantener el azul */
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
