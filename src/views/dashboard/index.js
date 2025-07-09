@@ -94,7 +94,7 @@ const Index = memo((props) => {
 
   // Obtener el ID del usuario almacenado
   const userId = localStorage.getItem('userId');
-
+console.log(userId)
   useEffect(() => {
     const fetchChronometerDate = async () => {
       try {
@@ -212,49 +212,50 @@ const Index = memo((props) => {
     return date.toLocaleDateString("es-ES", { day: '2-digit', month: 'long', year: 'numeric' });
   };
 
-  useEffect(() => {
-    const fetchUserRole = async () => {
-      if (!userId) {
-        console.log("No hay sesión de usuario activa");
-        return;
-      }
+    useEffect(() => {
+      const fetchUserRole = async () => {
+        if (!userId) {
+          console.log("No hay sesión de usuario activa");
+          return;
+        }
 
-      try {
-        const userRef = doc(db, "users", userId);
-        const userDoc = await getDoc(userRef);
+        try {
+          const userRef = doc(db, "users", userId);
+          console.log(userRef)
+          const userDoc = await getDoc(userRef);
+console.log(userDoc)
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
 
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-
-          // ✅ Guarda el rol
-          setUserRole(userData.role);
-
-          // ✅ Guarda todo el usuario actual, incluyendo su ID
-          setCurrentUser({
-            id: userId,
-            ...userData
-          });
-        } else {
-          console.log("No se encontró el documento del usuario.");
-          setToastMessage('No se encontró el documento del usuario.');
+            // ✅ Guarda el rol
+            setUserRole(userData.role);
+            console.log(userRole)
+            // ✅ Guarda todo el usuario actual, incluyendo su ID
+            setCurrentUser({
+              id: userId,
+              ...userData
+            });
+          } else {
+            console.log("No se encontró el documento del usuario.");
+            setToastMessage('No se encontró el documento del usuario.');
+            setToastVariant('danger');
+            setShowToast(true);
+          }
+        } catch (error) {
+          console.error("Error al obtener el rol del usuario:", error);
+          setError('Error al obtener el rol del usuario: ' + error.message);
+          setToastMessage('Error al obtener el rol del usuario');
           setToastVariant('danger');
           setShowToast(true);
         }
-      } catch (error) {
-        console.error("Error al obtener el rol del usuario:", error);
-        setError('Error al obtener el rol del usuario: ' + error.message);
-        setToastMessage('Error al obtener el rol del usuario');
-        setToastVariant('danger');
-        setShowToast(true);
-      }
-    };
+      };
 
-    fetchUserRole();
-  }, [userId]);
+      fetchUserRole();
+    }, [userId]);
 
 
   const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [userSales, setUserSales] = useState({}); // Ventas mensuales
   const [startDate, setStartDate] = useState(''); // Fecha de inicio del filtro
@@ -328,8 +329,7 @@ const Index = memo((props) => {
         }, 0);
 
         const goal = user.goal || 0; // Still use goal if it's relevant for something else, but not for remainingToGoal
-        const remainingToGoal = goal - totalMonthlySales; // Now remaining to goal based on monthly sales
-
+        const remainingToGoal = totalMonthlySales - goal; //comprobar si funciona correctamente
         salesData[user.id] = totalMonthlySales; // Store monthly sales
 
         return {
@@ -545,9 +545,7 @@ const Index = memo((props) => {
   }, [filteredUsers]);
 
 
-  if (userRole === null) {
-    return <div>Cargando...</div>;
-  }
+
 
   return (
     <Fragment>
@@ -701,9 +699,9 @@ const Index = memo((props) => {
             <Card>
               <Card.Header className="d-flex justify-content-between">
                 <div className="header-title">
-                  <h4 className="card-title">Estadisticas de Ventas</h4>
+                  <h4 className="card-title">Estadsticas de Ventas</h4>
                   <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
-                    Este módulo permite ver las estadisticas de sus vendedores.
+                    Este módulo permite ver las estadísticas de ventas de los vendedores.
                   </p>
                 </div>
               </Card.Header>
@@ -725,10 +723,10 @@ const Index = memo((props) => {
                       <tr className="ligth">
                         <th>Nombre</th>
                         <th>Apellido</th>
-                        <th>Contratos Mes</th>
+                        <th>Contratos del Mes</th>
                         <th>Ventas mensuales</th>
                         <th>Objetivo</th>
-                        <th>Faltante</th>
+                        <th>Diferencia</th>
                         <th>Pago</th>
                         <th>Acciones</th>
                       </tr>
@@ -746,9 +744,13 @@ const Index = memo((props) => {
                             <td style={{ textAlign: 'center' }}>
                               $ {Number(user.goal || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
-                            <td style={{ textAlign: 'center' }}>
-                              $ {Number(user.remainingToGoal || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            <td style={{ textAlign: 'center', color: (user.remainingToGoal || 0) < 0 ? 'red' : 'green' }}>
+                              $ {Number(user.remainingToGoal || 0).toLocaleString('en-US', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                              })}
                             </td>
+
                             <td>
                               {photoUrls[user.id] ? (
                                 <img
@@ -839,7 +841,7 @@ const Index = memo((props) => {
                           <th>Contratos mes</th>
                           <th>Ventas mensuales</th>
                           <th>Objetivo</th>
-                          <th>Faltante</th>
+                          <th>Diferencia</th>
                           <th> Pago</th>
                         </tr>
                       </thead>

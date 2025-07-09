@@ -435,7 +435,7 @@ const Service = () => {
                             <div className="header-title">
                                 <h4 className="card-title">Servicios</h4>
                                 <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
-                                    Este módulo permite gestionar los servicios que ofrece.
+                                    Este módulo permite gestionar los servicios que se ofrece.
                                 </p>
                             </div>
 
@@ -598,7 +598,7 @@ const Service = () => {
                             <div className="header-title">
                                 <h4 className="card-title">Ciudades
                                     <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
-                                        Este módulo permite gestionar las ciudades donde trabajan.
+                                        Este módulo permite gestionar las ciudades donde se trabajan.
                                     </p>
                                 </h4>
                             </div>

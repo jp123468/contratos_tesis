@@ -44,14 +44,15 @@ const Createcontract = () => {
 
     useEffect(() => {
         const initializeContractCode = async () => {
-            const nextCode = await getNextContractCode();
-            setContractCode(nextCode);
-            setCurrentDate(new Date().toISOString().split('T')[0]);
+          const nextCode = await getNextContractCode();
+          console.log('código generado', nextCode);
+          setContractCode(nextCode);
+          setCurrentDate(new Date().toISOString().split('T')[0]);
         };
         initializeContractCode();
         fetchOptions();
-    },
-        []);
+      }, []);
+      
 
     useEffect(() => {
         // Inicializa el estado de captura para cada titular
@@ -143,8 +144,10 @@ const Createcontract = () => {
     const handleSearch = async () => {
         let q;
         let queryMessage = '';
-        const formattedSearchValue = searchCriterion === 'idnumber' ? parseInt(searchValue, 10) : searchValue;
-
+        console.log(searchValue)
+        const formattedSearchValue = searchValue.trim();
+        console.log(formattedSearchValue)
+        console.log(searchValue)
         // Validación de campos vacíos
         if (!searchValue.trim()) {
             setToastMessage('Por favor ingresa un valor de búsqueda.');
@@ -164,10 +167,12 @@ const Createcontract = () => {
             }
 
             const clientsRef = collection(db, 'clients');
-
+            console.log(currentUser.role)
+            console.log(searchCriterion)
             // Criterio: por cédula
-            if (searchCriterion === 'idnumber') {
-                if (currentUser.role === 'admin') {
+            if (currentUser.role === 'admin') {
+                if (searchCriterion === 'idnumber') {
+
                     q = query(clientsRef, where('idnumber', '==', formattedSearchValue));
                 } else {
                     q = query(clientsRef, where('idnumber', '==', formattedSearchValue), where('id_vent', '==', currentUser.id));
@@ -260,6 +265,15 @@ const Createcontract = () => {
             setShowToast(true);
             return;
         }
+        const idNumbers = headlines.map(t => String(t.idNumber).trim());
+        const hasDuplicateIdNumbers = new Set(idNumbers).size !== idNumbers.length;
+
+        if (hasDuplicateIdNumbers) {
+            setToastMessage('No se puede repetir la cédula entre los titulares.');
+            setToastVariant('danger');
+            setShowToast(true);
+            return;
+        }
 
         if (selectedServices.length === 0) {
             setToastMessage('Debe seleccionar al menos un servicio.');
@@ -275,20 +289,20 @@ const Createcontract = () => {
         }
 
         if (!valorPactadoHoy) {
-            setToastMessage('El valor pactado hoy es obligatorio.');
+            setToastMessage('El valor  es obligatorio.');
             setToastVariant('danger');
             setShowToast(true);
             return;
         }
         if (isNaN(valorPactadoHoy)) {
-            setToastMessage('El valor pactado hoy debe ser un número válido.');
+            setToastMessage('El valor  debe ser un número válido.');
             setToastVariant('danger');
             setShowToast(true);
             return;
         }
 
         if (Number(valorPactadoHoy) < 0) {
-            setToastMessage('El valor pactado hoy no puede ser negativo.');
+            setToastMessage('El valor  no puede ser negativo.');
             setToastVariant('danger');
             setShowToast(true);
             return;
@@ -341,6 +355,7 @@ const Createcontract = () => {
                 timestamp: new Date(), // Fecha y hora de la notificación
                 type: "Revision"
             };
+
             setToastMessage('Contrato guardado con éxito.');
             setToastVariant('success');
             setShowToast(true);
@@ -552,6 +567,7 @@ const Createcontract = () => {
                                         <Form.Group className="mb-3">
                                             <h5 className="label_form">Nombre</h5>
                                             <Form.Control
+                                                aria-label={`Nombre del titular ${index + 1}`}
                                                 type="text"
                                                 name="name"
                                                 value={titular.name}
@@ -568,6 +584,7 @@ const Createcontract = () => {
                                         <Form.Group className="mb-3">
                                             <h5 className="label_form">Fecha de Nacimiento</h5>
                                             <Form.Control
+                                                aria-label={`birthdate ${index + 1}`}
                                                 type="date"
                                                 name="birthdate"
                                                 value={titular.birthdate}
@@ -583,7 +600,7 @@ const Createcontract = () => {
                                                 name="idNumber"
                                                 value={titular.idNumber}
                                                 onChange={(e) => handleTitularChange(index, e)}
-                                                placeholder="Número de cédula del titular"
+                                                placeholder={`Número de cédula del titular ${index + 1}`}
                                                 maxLength={10}
                                                 pattern="\d*"
                                                 required
@@ -712,6 +729,7 @@ const Createcontract = () => {
                                 <Form.Group className="mb-3">
                                     <h5 className="label_form">Ciudad</h5>
                                     <Select
+                                        placeholder={`Seleccionar ciudad`}
                                         options={ciudadOptions}
                                         value={selectCiudad}
                                         onChange={(selected) => setSelectedCiudad(selected)}
@@ -722,6 +740,7 @@ const Createcontract = () => {
                                 <Form.Group className="mb-3">
                                     <h5 className="label_form">Servicio</h5>
                                     <Select
+                                        placeholder={`Servicios`}
                                         isMulti
                                         options={serviceOptions}
                                         value={selectedServices}
@@ -743,10 +762,11 @@ const Createcontract = () => {
                         {/* === Paso 4: Estado de Venta y Forma de Pago === */}
                         {currentStep === 4 && (
                             <>
-                                <h4 className="section-title mt-4 text-center">Valores</h4>
+                                <h4 className="section-title mt-4 text-center">PAGO</h4>
                                 <Form.Group className="mb-3">
-                                    <h5 className="label_form">Valor Pactado Hoy</h5>
+                                    <h5 className="label_form">Valor </h5>
                                     <Form.Control
+                                        placeholder={`Pago`}
                                         type="number"
                                         value={valorPactadoHoy}
                                         onChange={(e) => {
@@ -763,6 +783,7 @@ const Createcontract = () => {
                                 <Form.Group className="mb-3">
                                     <h5 className="label_form">Forma de Pago</h5>
                                     <Select
+                                        placeholder={`Forma de Pago`}
                                         options={paymentMethodOptions}
                                         value={selectedPaymentMethod}
                                         onChange={(selected) => setSelectedPaymentMethod(selected)}
@@ -770,7 +791,7 @@ const Createcontract = () => {
                                     />
                                 </Form.Group>
                                 <div className="d-flex justify-content-center mb-3">
-                                    <h5 style={{ fontWeight: '700', marginTop: '7px', marginRight: '27px' }}>Foto Pago:</h5>
+                                    <h5 style={{ fontWeight: '700', marginTop: '7px', marginRight: '27px' }}>Foto:</h5>
                                     <Button
                                         variant="info"
                                         className="btn-secondary-custom"
@@ -815,6 +836,7 @@ const Createcontract = () => {
                                         as="textarea"
                                         rows={3}
                                         maxLength={70}
+                                        placeholder={`Observaciones hechas del cliente`}
                                         value={observations}
                                         onChange={(e) => setObservations(e.target.value)}
                                         className="form-control-custom"
@@ -827,6 +849,7 @@ const Createcontract = () => {
                                         as="textarea"
                                         rows={3}
                                         maxLength={70}
+                                        placeholder={`Observaciones para el administrador`}
                                         value={observationsadmin}
                                         onChange={(e) => setObservationsadmin(e.target.value)}
                                         className="form-control-custom"

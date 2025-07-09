@@ -174,21 +174,21 @@ const UpdateContract = () => {
     }
 
     if (!valorPactadoHoy) {
-      setToastMessage('El valor pactado hoy es obligatorio.');
+      setToastMessage('El valor  es obligatorio.');
       setToastVariant('danger');
       setShowToast(true);
       return;
     }
 
     if (isNaN(valorPactadoHoy)) {
-      setToastMessage('El valor pactado hoy debe ser un número válido.');
+      setToastMessage('El valor  debe ser un número válido.');
       setToastVariant('danger');
       setShowToast(true);
       return;
     }
 
     if (Number(valorPactadoHoy) < 0) {
-      setToastMessage('El valor pactado hoy no puede ser negativo.');
+      setToastMessage('El valor  no puede ser negativo.');
       setToastVariant('danger');
       setShowToast(true);
       return;
@@ -618,9 +618,9 @@ const UpdateContract = () => {
             {/* === Paso 4: Estado de Venta y Forma de Pago === */}
             {currentStep === 4 && (
               <>
-                <h4 className="section-title mt-4 text-center" style={{ color: '#0817ba' }}>VALORES</h4>
+                <h4 className="section-title mt-4 text-center" style={{ color: '#0817ba' }}>PAGO</h4>
                 <Form.Group className="mb-3">
-                  <h5 className="label_form">Valor Pactado Hoy</h5>
+                  <h5 className="label_form">Valor </h5>
                   <Form.Control
                     type="number"
                     value={valorPactadoHoy}
@@ -645,7 +645,7 @@ const UpdateContract = () => {
                   />
                 </Form.Group>
                 <div className="d-flex justify-content-center mb-3">
-                  <h5 style={{ fontWeight: '700', marginTop: '7px', marginRight: '27px' }}>Foto Pago:</h5>
+                  <h5 style={{ fontWeight: '700', marginTop: '7px', marginRight: '27px' }}>Foto:</h5>
 
                   <Button
                     variant="info"

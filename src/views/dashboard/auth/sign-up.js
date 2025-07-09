@@ -100,7 +100,7 @@ const SignUp = () => {
                                  </Col>
                                  <Col lg="6">
                                     <Form.Group className="form-group">
-                                       <h3 htmlFor="confirmPassword">Repita la contraseña</h3>
+                                       <h3 htmlFor="confirmPassword">Repetir la contraseña</h3>
                                        <Form.Control type="password" id="confirmPassword" placeholder=" " onChange={handleChange} />
                                     </Form.Group>
                                  </Col>

@@ -207,7 +207,7 @@ const SalesChartByRange = ({ userRole, currentUserId }) => {
   return (
     <div className="card-body py-4" style={{ minHeight: "450px" }}>
       <div className="text-center mb-4">
-        <span className="fw-bold fs-1">${totalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>    <div className="fs-5 text-muted">Ventas Totales en el Rango</div>
+        <span className="fw-bold fs-1">${totalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>    <div className="fs-5 text-muted">Ventas Totales</div>
         <div className="text-success mt-2">
           <i className="fas fa-calendar-alt fa-lg"></i>
         </div>

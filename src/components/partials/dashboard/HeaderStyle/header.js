@@ -413,7 +413,7 @@ const Header = memo((props) => {
                     {userRole === 'admin' ? (
                         <>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="firstName">Nombres</h5>
+                                <label htmlFor="firstName"  className="text-black">Nombres</label>
                                 <Form.Control
                                     type="text"
                                     id="firstName"
@@ -424,7 +424,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="lastName">Apellidos</h5>
+                                <label htmlFor="lastName"  className="text-black">Apellidos</label>
                                 <Form.Control
                                     type="text"
                                     id="lastName"
@@ -435,7 +435,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="email">Correo Electrónico</h5>
+                                <label htmlFor="email"  className="text-black">Correo Electrónico</label>
                                 <Form.Control
                                     type="email"
                                     id="email"
@@ -447,7 +447,7 @@ const Header = memo((props) => {
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="password">Contraseña</h5>
+                                <label htmlFor="password"  className="text-black">Contraseña</label>
                                 <div className="input-group">
                                     <Form.Control
                                         type={showPassword ? "text" : "password"}
@@ -463,7 +463,7 @@ const Header = memo((props) => {
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="phone">No. Celular</h5>
+                                <label htmlFor="phone"  className="text-black">No. Celular</label>
                                 <Form.Control
                                     type="text"
                                     id="phone"
@@ -480,7 +480,7 @@ const Header = memo((props) => {
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="role">Rol</h5>
+                                <label htmlFor="role"  className="text-black">Rol</label>
                                 <Form.Select
                                     type="text" // 'type' is not standard for Form.Select, but it won't break anything.
                                     id="role"
@@ -490,12 +490,12 @@ const Header = memo((props) => {
                                 >
                                     <option disabled value="">Seleccionar Rol</option>
                                     <option value="admin">Administrador</option>
-                                    <option value="user">Vendedor</option>
+                                    <option value="vendedor">Vendedor</option>
                                 </Form.Select>
                             </Form.Group>
 
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="createdAt">Fecha de Creación</h5>
+                                <label htmlFor="createdAt"  className="text-black">Fecha de Creación</label>
                                 <Form.Control
                                     type="datetime-local"
                                     id="createdAt"
@@ -517,7 +517,7 @@ const Header = memo((props) => {
 
                         <>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="firstName">Nombres</h5>
+                                <label htmlFor="firstName"  className="text-black">Nombres</label>
                                 <Form.Control
                                     type="text"
                                     id="firstName"
@@ -528,7 +528,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="lastName">Apellidos</h5>
+                                <label htmlFor="lastName"  className="text-black">Apellidos</label>
                                 <Form.Control
                                     type="text"
                                     id="lastName"
@@ -539,7 +539,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="email">Correo Electrónico</h5>
+                                <label htmlFor="email"  className="text-black">Correo Electrónico</label>
                                 <Form.Control
                                     type="email"
                                     id="email"
@@ -550,7 +550,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="password">Contraseña</h5>
+                                <label htmlFor="password"  className="text-black">Contraseña</label>
                                 <div className="input-group">
                                     <Form.Control
                                         type={showPassword ? "text" : "password"} // Alterna entre 'text' y 'password'
@@ -566,7 +566,7 @@ const Header = memo((props) => {
                                 </div>
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="phone">No. Celular</h5>
+                                <label htmlFor="phone" className="text-black" >No. Celular</label>
                                 <Form.Control
                                     type="number"
                                     id="phone"
@@ -577,7 +577,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="role">Rol</h5>
+                                <label htmlFor="role"  className="text-black">Rol</label>
                                 <Form.Control
                                     readOnly
                                     type="text"
@@ -589,7 +589,7 @@ const Header = memo((props) => {
                                 />
                             </Form.Group>
                             <Form.Group className="mb-3">
-                                <h5 htmlFor="createdAt">Fecha de Creación</h5>
+                                <label htmlFor="createdAt"  className="text-black">Fecha de Creación</label>
                                 <Form.Control
                                     readOnly
                                     type="datetime-local"
@@ -622,7 +622,7 @@ const Header = memo((props) => {
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="formNotificationTitle">
-                            <h5>Correcciones</h5>
+                            <label>Correcciones</label>
                             <Form.Control
                                 type="text"
                                 value={editedNotification.corrections}

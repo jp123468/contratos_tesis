@@ -486,13 +486,15 @@ const Admin = () => {
                                                             <td>
                                                                 <Button
                                                                     variant="primary"
+                                                                    aria-label="Ver detalles del contrato"
                                                                     onClick={() => {
                                                                         setSelectedContract(contract);
-                                                                        setShowContractModal(true); // <- Esto abre el modal
+                                                                        setShowContractModal(true);
                                                                     }}
                                                                 >
                                                                     Detalles
                                                                 </Button>
+
                                                             </td>
 
                                                         </tr>
@@ -606,7 +608,7 @@ const Admin = () => {
                                     <h5>Método de pago:</h5>
                                     <h6 className="data-value">{selectedContract.paymentMethod?.label}</h6>
 
-                                    <h5>Valor pactado hoy:</h5>
+                                    <h5>Valor :</h5>
                                     <h6 className="data-value">${selectedContract.valorPactadoHoy}</h6>
 
                                     <h5>Foto del Pago:</h5>

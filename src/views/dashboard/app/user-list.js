@@ -14,7 +14,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 
 
-const UserList = () => {
+const UserList = ({ mockedUsers }) => {
    const [toastMessage, setToastMessage] = useState('');
    const [toastVariant, setToastVariant] = useState('');
    const [showToast, setShowToast] = useState(false);
@@ -174,20 +174,28 @@ const UserList = () => {
       try {
          const usersCollection = collection(db, "users");
          const usersSnapshot = await getDocs(usersCollection);
-         const usersList = usersSnapshot.docs.map(doc => doc.data());
+         const usersList = usersSnapshot.docs.map(doc => ({
+            ...doc.data(),
+            id: doc.id
+         }));
          setUsers(usersList);
       } catch (error) {
          console.error('Error al obtener Usuarios:', error);
-
       }
    };
 
    useEffect(() => {
+      if (mockedUsers && Array.isArray(mockedUsers)) {
+        setUsers(mockedUsers);
+        return;
+      }
       fetchUsers();
-   }, []);
+    }, [mockedUsers]);
+    
+
+   const [previousPassword, setPreviousPassword] = useState('');
 
    const handleEdit = (user) => {
-      console.log('Usuario a editar:', user);
       setFormData({
          id: user.id,
          firstName: user.firstName,
@@ -198,9 +206,9 @@ const UserList = () => {
          role: user.role
       });
       setEditUserId(user.id);
+      setPreviousPassword(user.password); // 👈 aquí guardas la contraseña anterior
       handleShow2();
    };
-
    const handleUpdateUser = async () => {
       if (!editUserId) {
          console.error("ID de Usuario no definido.");
@@ -247,11 +255,14 @@ const UserList = () => {
          return;
       }
       const isDuplicate = users.some(user =>
-         user.firstName.toLowerCase() === firstName.toLowerCase() ||
-         user.lastName.toLowerCase() === lastName.toLowerCase() ||
-         user.email.toLowerCase() === email.toLowerCase() ||
-         user.phone === phone
+         user.id !== editUserId && (
+            user.firstName.toLowerCase() === firstName.toLowerCase() ||
+            user.lastName.toLowerCase() === lastName.toLowerCase() ||
+            user.email.toLowerCase() === email.toLowerCase() ||
+            user.phone === phone
+         )
       );
+      
 
       if (isDuplicate) {
          setToastMessage('Ya existe un Usuario con el mismo nombre, apellido, correo o teléfono.');
@@ -302,11 +313,23 @@ const UserList = () => {
                   : user
             )
          );
-
          setToastMessage('Usuario actualizado correctamente.');
          setToastVariant('success');
          setShowToast(true);
+
+         // Si la contraseña cambió, mostrar mensaje extra luego de 1.5s
+         if (password !== previousPassword) {
+            setTimeout(() => {
+               setToastMessage('Contraseña actualizada correctamente.');
+               setToastVariant('success');
+               setShowToast(true);
+               console.log('Contraseña actualizada correctamente');
+
+            }, 1500);
+
+         }
          handleClose2();
+
          fetchUsers();
       } catch (error) {
          console.error("Error actualizando Usuario:", error);
@@ -418,7 +441,7 @@ const UserList = () => {
                   <Card>
                      <Card.Header className="d-flex justify-content-between">
                         <div className="header-title">
-                           <h5 className="card-title">Usuarios</h5>
+                           <label className="card-title">Usuarios</label>
                            <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
                               Este módulo permite gestionar de vendedores y personal administrativo.
                            </p>
@@ -436,7 +459,7 @@ const UserList = () => {
                                  <Row>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="firstName" className="text-black">Nombre</h5>
+                                          <label htmlFor="firstName" className="text-black">Nombre</label>
                                           <Form.Control
                                              required
                                              type="text"
@@ -453,7 +476,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="lastName" className="text-black">Apellido</h5>
+                                          <label htmlFor="lastName" className="text-black">Apellido</label>
                                           <Form.Control
                                              required
                                              type="text"
@@ -470,7 +493,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="email" className="text-black">Correo Electrónico</h5>
+                                          <label htmlFor="email" className="text-black">Correo Electrónico</label>
                                           <Form.Control
                                              required
                                              type="email"
@@ -484,7 +507,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="phone" className="text-black">No. Celular</h5>
+                                          <label htmlFor="phone" className="text-black">No. Celular</label>
                                           <Form.Control
                                              required
                                              type="text"
@@ -499,7 +522,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="password" className="text-black">Contraseña</h5>
+                                          <label htmlFor="password" className="text-black">Contraseña</label>
                                           <InputGroup>
                                              <Form.Control
                                                 required
@@ -518,7 +541,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="confirmPassword" className="text-black">Repita la contraseña</h5>
+                                          <label htmlFor="confirmPassword" className="text-black">Repita la contraseña</label>
                                           <InputGroup>
                                              <Form.Control
                                                 required
@@ -555,7 +578,7 @@ const UserList = () => {
                                  <Row>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5>Nombre</h5>
+                                          <label  htmlFor="firstName"  className="text-black">Nombre</label>
                                           <Form.Control
                                              type="text"
                                              id="firstName"
@@ -570,7 +593,7 @@ const UserList = () => {
                                     </Col>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5>Apellido</h5>
+                                          <label htmlFor="lastName"  className="text-black">Apellido</label>
                                           <Form.Control
                                              type="text"
                                              id="lastName"
@@ -585,7 +608,7 @@ const UserList = () => {
                                     </Col>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5>Email</h5>
+                                          <label htmlFor="email" className="text-black">Email</label>
                                           <Form.Control
                                              type="email"
                                              id="email"
@@ -596,7 +619,7 @@ const UserList = () => {
                                     </Col>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5>Teléfono</h5>
+                                          <label  htmlFor="phone"  className="text-black">Teléfono</label>
                                           <Form.Control
                                              type="text"
                                              id="phone"
@@ -608,13 +631,15 @@ const UserList = () => {
                                     </Col>
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1" style={{ position: "relative" }}>
-                                          <h5>Contraseña</h5>
+                                          <label htmlFor="password" className="text-black">Contraseña</label>
                                           <Form.Control
                                              type={showPassword ? "text" : "password"}
                                              id="password"
                                              value={formData.password}
                                              onChange={handleChange}
+                                             data-testid="password-input"  // <-- Agrega esta línea
                                           />
+
                                           <span
                                              onClick={togglePasswordVisibility}
                                              style={{
@@ -634,7 +659,7 @@ const UserList = () => {
 
                                     <Col md={6}>
                                        <Form.Group className="mb-5 ml-1">
-                                          <h5 htmlFor="role">Rol</h5>
+                                          <label htmlFor="role" className="text-black">Rol</label>
                                           <Form.Select
                                              id="role"
                                              value={formData.role}
@@ -663,7 +688,7 @@ const UserList = () => {
                            <Modal.Body>
                               {selectedUser && (
                                  <>
-                                    <h5 className="mb-5 text-center">¿Estás seguro de que deseas eliminar el siguiente Usuario?</h5>
+                                    <label className="mb-5 text-center">¿Estás seguro de que deseas eliminar el siguiente Usuario?</label>
                                     <ul className="list-unstyled ps-3">
                                        <li>
                                           <strong className="text-dark">Nombres:</strong>{' '}

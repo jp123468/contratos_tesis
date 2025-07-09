@@ -25,7 +25,7 @@ const ContractsTable = () => { // Asegúrate de pasar el objeto 'storage'
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Estado para el modal de confirmación de eliminación
   const [userRole, setUserRole] = useState(null); // Almacena el rol del usuario
   const location = useLocation();
-  const sellerId = localStorage.getItem('userId'); // Obtener el ID del usuario almacenado
+  const sellerId = localStorage.getItem('userId');   // Obtener el ID del usuario almacenado
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false); // Nuevo estado para bloquear el botón después de guardar
   const navigate = useNavigate();
@@ -613,7 +613,7 @@ const ContractsTable = () => { // Asegúrate de pasar el objeto 'storage'
               <div className="header-title">
                 <h4 className="card-title">Lista de Contratos</h4>
                 <p className="text-muted" style={{ fontSize: '0.9rem', marginTop: '4px' }}>
-                  Este módulo permite gestionar los diversos contratos que creas.
+                  Este módulo permite gestionar contratos.
                 </p>
               </div>
               <Link
@@ -703,6 +703,7 @@ const ContractsTable = () => { // Asegúrate de pasar el objeto 'storage'
                                   disabled={contract.approved === true} // ✅ Se deshabilita si está aprobado
                                 >
                                   <FaTrash />
+                                  <span className="visually-hidden">Eliminar</span> {/* 👈 para tests */}
                                 </Button>
                               )}
                             </td>
@@ -820,7 +821,7 @@ const ContractsTable = () => { // Asegúrate de pasar el objeto 'storage'
                   <h5>Método de pago:</h5>
                   <h6 className="data-value">{selectedContract.paymentMethod?.label}</h6>
 
-                  <h5>Valor pactado hoy:</h5>
+                  <h5>Valor :</h5>
                   <h6 className="data-value">${selectedContract.valorPactadoHoy}</h6>
 
                   <h5>Foto del Pago:</h5>
@@ -1010,7 +1011,7 @@ const ContractsTable = () => { // Asegúrate de pasar el objeto 'storage'
             ¿Estás seguro de que deseas eliminar este contrato?
           </Modal.Body>
           <Modal.Footer className="d-flex justify-content-center">
-            <Button variant="danger" onClick={() => handleDelete(contractToDelete)}>
+            <Button variant="danger"data-testid="confirm-delete-button" onClick={() => handleDelete(contractToDelete)}>
               Confirmar Eliminación
             </Button>
           </Modal.Footer>
