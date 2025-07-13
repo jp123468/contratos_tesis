@@ -416,17 +416,17 @@ const Createcontract = () => {
         const titularIdNumber = headlines[currentTitularIndex].idNumber;
 
         if (currentPhotoType === 'front') {
-            filePath = `photos/${titularIdNumber}/front-${timestamp}.jpg`;
+            filePath = `photos/${titularIdNumber}/front.jpg`;
             const newCapturedStates = [...capturedStates];
             newCapturedStates[currentTitularIndex].front = true;
             setCapturedStates(newCapturedStates);
         } else if (currentPhotoType === 'back') {
-            filePath = `photos/${titularIdNumber}/back-${timestamp}.jpg`;
+            filePath = `photos/${titularIdNumber}/back.jpg`;
             const newCapturedStates = [...capturedStates];
             newCapturedStates[currentTitularIndex].back = true;
             setCapturedStates(newCapturedStates);
         } else if (currentPhotoType === 'pago') {
-            filePath = `photos/${client.idnumber}/pago-${timestamp}.jpg`;
+            filePath = `photos/${client.idnumber}/pago.jpg`;
         }
 
         const storageRef = ref(storage, filePath);

@@ -108,16 +108,26 @@ const UpdateContract = () => {
         setObservationsadmin(data.observationsadmin || '');
         if (data.headlines) {
           const initialPhotos = [];
+          const initialCaptured = [];   // ← nuevo
+        
           for (let i = 0; i < data.headlines.length; i++) {
             const titular = data.headlines[i];
+        
             initialPhotos.push({
               front: titular.photoFront || '',
-              back: titular.photoBack || ''
+              back:  titular.photoBack  || '',
+            });
+        
+            initialCaptured.push({
+              front: Boolean(titular.photoFront),
+              back:  Boolean(titular.photoBack),
             });
           }
-
+        
           setPhotos(initialPhotos);
+          setCapturedStates(initialCaptured);   // ← importante
         }
+        
 
         if (data.photoPago) {
           const photoArray = Array.isArray(data.photoPago)
@@ -270,7 +280,10 @@ const UpdateContract = () => {
   const handleAddTitular = () => {
     setTitulares([...headlines, { name: '', birthdate: '', idNumber: '', photoFront: '', photoBack: '' }]);
     setCapturedStates([...capturedStates, { front: false, back: false }]);
+    // añade bloque vacío también en photos
+ setPhotos([...photos, { front: '', back: '' }]);
   };
+
 
   const handleRemoveTitular = (index) => {
     const newHeadlines = headlines.filter((_, i) => i !== index);
@@ -292,34 +305,40 @@ const UpdateContract = () => {
       setShowToast(true);
       return;
     }
-
+  
     const storage = getStorage();
     const updatedTitulares = [...headlines]; // clonar arreglo titulares
     const timestamp = new Date().getTime();
     let filePath = '';
-
+  
     const titularIdNumber = headlines[currentTitularIndex].idNumber;
-
-    if (currentPhotoType === 'front') {
-      filePath = `photos/${titularIdNumber}/front-${timestamp}.jpg`;
-      const newCapturedStates = [...capturedStates];
-      newCapturedStates[currentTitularIndex].front = true;
-      setCapturedStates(newCapturedStates);
-    } else if (currentPhotoType === 'back') {
-      filePath = `photos/${titularIdNumber}/back-${timestamp}.jpg`;
-      const newCapturedStates = [...capturedStates];
-      newCapturedStates[currentTitularIndex].back = true;
-      setCapturedStates(newCapturedStates);
-    } else if (currentPhotoType === 'pago') {
-      filePath = `photos/${client.idnumber}/pago-${timestamp}.jpg`;
+  
+    // Clonar y asegurar longitud y estructura de capturedStates
+    const newCapturedStates = [...capturedStates];
+    while (newCapturedStates.length <= currentTitularIndex) {
+      newCapturedStates.push({ front: false, back: false, pago: false });
     }
-
+  
+    if (currentPhotoType === 'front') {
+      filePath = `photos/${titularIdNumber}/front.jpg`; // sin timestamp para reemplazar
+      newCapturedStates[currentTitularIndex].front = true;
+    } else if (currentPhotoType === 'back') {
+      filePath = `photos/${titularIdNumber}/back.jpg`; // sin timestamp para reemplazar
+      newCapturedStates[currentTitularIndex].back = true;
+    } else if (currentPhotoType === 'pago') {
+      filePath = `photos/${client.idnumber}/pago.jpg`;
+      newCapturedStates[0] = newCapturedStates[0] || { front: false, back: false, pago: false };
+      newCapturedStates[0].pago = true;
+    }
+    
+    setCapturedStates(newCapturedStates);
+  
     const storageRef = ref(storage, filePath);
-
+  
     try {
       const snapshot = await uploadString(storageRef, photoUrl, 'data_url');
       const downloadURL = await getDownloadURL(snapshot.ref);
-
+  
       if (currentPhotoType === 'front') {
         updatedTitulares[currentTitularIndex].photoFront = downloadURL;
       } else if (currentPhotoType === 'back') {
@@ -328,9 +347,9 @@ const UpdateContract = () => {
         if (!photoPago) setPhotoPago([]);
         setPhotoPago((prevPhotoPago) => [...prevPhotoPago, downloadURL]);
       }
-
+  
       setTitulares(updatedTitulares);
-
+  
       // Actualizar estado photos para miniaturas front/back
       const updatedPhotos = [...photos];
       if (currentPhotoType === 'front') {
@@ -345,9 +364,9 @@ const UpdateContract = () => {
         };
       }
       setPhotos(updatedPhotos);
-
+  
       setShowCamera(false);
-
+  
       setToastMessage('Foto capturada y guardada correctamente.');
       setToastVariant('success');
       setShowToast(true);
@@ -358,7 +377,7 @@ const UpdateContract = () => {
       setShowToast(true);
     }
   };
-
+  
   const nextStep = () => setCurrentStep((prev) => prev + 1);
   const prevStep = () => setCurrentStep((prev) => prev - 1);
 
@@ -494,7 +513,7 @@ const UpdateContract = () => {
                               variant="info"
                               className="btn-secondary-custom"
                               onClick={() => handleCapture('front', index)}
-                              disabled={capturedStates[index]?.front}
+                             
                             >
                               Capturar
                             </Button>
@@ -530,7 +549,7 @@ const UpdateContract = () => {
                               variant="info"
                               className="btn-secondary-custom"
                               onClick={() => handleCapture('back', index)}
-                              disabled={capturedStates[index]?.back}
+                            
                             >
                               Capturar
                             </Button>
@@ -538,10 +557,6 @@ const UpdateContract = () => {
                         </Form.Group>
                       </Col>
                     </Row>
-
-
-
-
                     {index > 0 && (
                       <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
                         <Button
