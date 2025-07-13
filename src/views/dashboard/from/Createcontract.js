@@ -170,7 +170,7 @@ const Createcontract = () => {
             console.log(currentUser.role)
             console.log(searchCriterion)
             // Criterio: por cédula
-            if (currentUser.role === 'admin') {
+            if (currentUser.role !== 'admin') {
                 if (searchCriterion === 'idnumber') {
 
                     q = query(clientsRef, where('idnumber', '==', formattedSearchValue));
