@@ -170,15 +170,36 @@ const Createcontract = () => {
             console.log(currentUser.role)
             console.log(searchCriterion)
             // Criterio: por cédula
-            if (currentUser.role !== 'admin') {
-                if (searchCriterion === 'idnumber') {
+           // --- Construcción de la consulta según el rol ---
+if (currentUser.role === 'admin') {
+  // ADMIN: puede buscar cualquier cliente
+  if (searchCriterion === 'idnumber') {
+    q = query(clientsRef, where('idnumber', '==', formattedSearchValue));
+  } else {
+    q = query(clientsRef, where(searchCriterion, '==', formattedSearchValue));
+  }
+  queryMessage = searchCriterion === 'idnumber' ? 'cédula' : searchCriterion;
 
-                    q = query(clientsRef, where('idnumber', '==', formattedSearchValue));
-                } else {
-                    q = query(clientsRef, where('idnumber', '==', formattedSearchValue), where('id_vent', '==', currentUser.id));
-                }
-                queryMessage = 'cédula';
-            }
+} else if (currentUser.role === 'vendedor') {
+  // VENDEDOR: solo ve sus propios clientes
+  if (searchCriterion === 'idnumber') {
+    q = query(
+      clientsRef,
+      where('idnumber', '==', formattedSearchValue),
+      where('id_vent', '==', currentUser.id)
+    );
+  } else {
+    q = query(
+      clientsRef,
+      where(searchCriterion, '==', formattedSearchValue),
+      where('id_vent', '==', currentUser.id)
+    );
+  }
+  queryMessage = searchCriterion === 'idnumber' ? 'cédula' : searchCriterion;
+}
+
+// Si manejas otros roles, agrega más else‑if aquí
+
 
 
             // Ejecutar la consulta
