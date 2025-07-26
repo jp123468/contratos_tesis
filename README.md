@@ -5,10 +5,10 @@ Sistema web para STROIT CORP S.A., empresa ecuatoriana de visados, que automatiz
 
 ### Documentos
 - [📄 Tesis completa ](/docs/Tesis_Final_José-Galarza.pdf)  
-- [📊 Fomulario ](/docs/F_AA_233.pdf)  
+- [📊 Fomulario  F_AA_233 ](/docs/F_AA_233.pdf)  
 
 ### Videos
-- [▶️ Tutorial de utiloización del proyecto](https://youtu.be/Hl3LaZUSHtc)
+- [▶️ Tutorial de funcionamiento del proyecto](https://youtu.be/Hl3LaZUSHtc)
 
 ### Producción 
 ▲ [Deployed on Vercel](https://contratos-tesis.vercel.app/) 
