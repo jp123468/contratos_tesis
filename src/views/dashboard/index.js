@@ -94,7 +94,7 @@ const Index = memo((props) => {
 
   // Obtener el ID del usuario almacenado
   const userId = localStorage.getItem('userId');
-console.log(userId)
+
   useEffect(() => {
     const fetchChronometerDate = async () => {
       try {
@@ -312,15 +312,14 @@ console.log(userDoc)
       const filteredMonthlyContracts = contractsList.filter(contract => {
         const contractDate = contract.date ? new Date(contract.date) : null;
         // Check for 'contractCodeaprov' and date within the calculated monthly range
-        return contract.contractCodeaprov !== '0' && contractDate && contractDate >= startOfMonth && contractDate <= endDate;
+        return contract.contractCodeaprov !== "0" && contractDate && contractDate >= startOfMonth && contractDate <= endDate;
       });
-
       const salesData = {}; // Will store monthly sales
 
       const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       const usersWithContractCount = usersList.map(user => {
         // Filter monthly contracts for the current user
-        const userMonthlyContracts = filteredMonthlyContracts.filter(contract => contract.id_vent === user.id);
+        const userMonthlyContracts = filteredMonthlyContracts.filter(contract => contract.id_vent === user.id );
 
         const contractCount = userMonthlyContracts.length; // Count of approved contracts for the month
 
